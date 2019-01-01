@@ -34,7 +34,7 @@ func ParseRRNS(rrs []dns.RR) (nss []string) {
 		rrElements := strings.Split(rr.String(), "\t")
 		if len(rrElements) == 5 {
 			if rrElements[3] == "NS" {
-				nss = append(nss,rrElements[4][:len(rrElements[4])-1])
+				nss = append(nss, rrElements[4][:len(rrElements[4])-1])
 			}
 		}
 	}
@@ -58,10 +58,17 @@ func SendDNSQuery(record *Record) {
 	m := new(dns.Msg)
 	domain, err := publicsuffix.Domain(record.rightRecord.domain)
 	m.SetQuestion(dns.Fqdn(domain), dns.TypeNS)
+	errCount := 3
+NSStart:
 	in, err := dns.Exchange(m, record.reServer+":53")
 	if err != nil {
 		if strings.Index(err.Error(), "timeout") >= 0 {
-			record.timeoutFlag = true
+			if errCount == 0 {
+				record.timeoutFlag = true
+			} else {
+				errCount--
+				goto NSStart
+			}
 		}
 	} else {
 		record.timeoutFlag = false
@@ -73,9 +80,16 @@ func SendDNSQuery(record *Record) {
 	for _, ns := range record.detectCNames {
 		m2 := new(dns.Msg)
 		m2.SetQuestion(dns.Fqdn(ns), dns.TypeA)
+		errCount := 3
+	AStart:
 		in2, err := dns.Exchange(m2, record.reServer+":53")
 		if err != nil {
-			continue
+			if errCount == 0 {
+				continue
+			} else {
+				errCount--
+				goto AStart
+			}
 		} else {
 			fmt.Println(in2.Answer)
 			record.detectAs = append(record.detectAs, ParseRRA(in2.Answer)...)

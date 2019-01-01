@@ -36,6 +36,9 @@ func getRightValue(domains []string) (rightRecords []*RightRecord, err error) {
 	if err != nil {
 		return nil, err
 	}
+	if err = db.Ping(); err != nil {
+		return nil, err
+	}
 	//查询数据
 	querySQL := "SELECT dns_domain_name, ns_A FROM domain_library WHERE domain_name=?"
 	//fmt.Println(len(domains))
