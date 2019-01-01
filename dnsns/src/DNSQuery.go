@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/miekg/dns"
+	"github.com/weppos/publicsuffix-go/publicsuffix"
 	"runtime"
 	"strings"
 )
@@ -55,7 +56,8 @@ func ParseRRA(rrs []dns.RR) (as []string) {
 func SendDNSQuery(record *Record) {
 	//探测NS
 	m := new(dns.Msg)
-	m.SetQuestion(dns.Fqdn(record.rightRecord.domain), dns.TypeNS)
+	domain, err := publicsuffix.Domain(record.rightRecord.domain)
+	m.SetQuestion(dns.Fqdn(domain), dns.TypeNS)
 	in, err := dns.Exchange(m, record.reServer+":53")
 	if err != nil {
 		if strings.Index(err.Error(), "timeout") >= 0 {
@@ -63,7 +65,6 @@ func SendDNSQuery(record *Record) {
 		}
 	} else {
 		record.timeoutFlag = false
-		fmt.Println(in.Answer)
 		record.detectCNames = ParseRRNS(in.Answer)
 	}
 	//探测NS A
@@ -74,7 +75,6 @@ func SendDNSQuery(record *Record) {
 		if err != nil {
 			continue
 		} else {
-			fmt.Println(in.Answer)
 			record.detectAs = append(record.detectAs, ParseRRA(in.Answer)...)
 		}
 	}
