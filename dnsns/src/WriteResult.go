@@ -5,6 +5,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"fmt"
 )
 
 const ResultPath  = "/tmp/result/"
@@ -14,12 +15,16 @@ func GenerateResultLine(record *Record, taskID string, taskName string) {
 	var resultList []string
 	detectAsStr := strings.Join(record.detectAs, "+")
 	detectCNamesStr := strings.Join(record.detectCNames, "+")
+	fmt.Println(record.detectAs)
+	fmt.Println(record.detectCNames)
 	compareCNamesStr := strings.Join(record.rightRecord.rightCNames, "+")
+	fmt.Println(compareCNamesStr)
 	resultList = append(resultList,
 		taskName, taskID, record.rightRecord.domain + ":" + compareCNamesStr,
 		"0", record.reServer, record.compareType,
-		detectCNamesStr + "/" + detectAsStr, record.result, ";\n")
+		detectCNamesStr + "/" + detectAsStr, record.result, "\n")
 	resultStr := strings.Join(resultList, ";")
+	fmt.Println(resultStr)
 	resultLine <- resultStr
 	return
 }
@@ -35,7 +40,7 @@ func ControlWriteResultRoutine(tasks *Task) (err error){
 	}
 	close(resultLine)
 	err = os.Mkdir(ResultPath, 0777)
-	if !os.IsExist(err) {
+	if err != nil && !os.IsExist(err) {
 		return
 	}
 	err = ioutil.WriteFile(ResultPath + tasks.taskID + ".result",

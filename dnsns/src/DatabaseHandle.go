@@ -30,14 +30,14 @@ func getRightValue(domains []string) (rightRecords []*RightRecord, err error) {
 	//TODO 备份
 	db, err := sql.Open(
 		"mysql",
-		//"root:123456@tcp(192.168.226.11:3306)/cncert_initiative_probe_system")
-		"zyq:123456@tcp(10.96.129.6:3306)/cncert_initiative_probe_system")
+		"root:123456@tcp(192.168.226.11:3306)/cncert_initiative_probe_system")
+		//"zyq:123456@tcp(10.96.129.6:3306)/cncert_initiative_probe_system")
 
 	if err != nil {
 		return nil, err
 	}
 	//查询数据
-	querySQL := "SELECT ns_domain, ns_A FROM domain_library WHERE domain_name=?"
+	querySQL := "SELECT dns_domain_name, ns_A FROM domain_library WHERE domain_name=?"
 	//fmt.Println(len(domains))
 	for _, domain := range domains {
 		if len(domain) == 0 {

@@ -60,12 +60,10 @@ func SendDNSQuery(record *Record) {
 	if err != nil {
 		if strings.Index(err.Error(), "timeout") >= 0 {
 			record.timeoutFlag = true
-		} else {
-			quit <- err
-			return
 		}
 	} else {
 		record.timeoutFlag = false
+		fmt.Println(in.Answer)
 		record.detectCNames = ParseRRNS(in.Answer)
 	}
 	//探测NS A
@@ -76,6 +74,7 @@ func SendDNSQuery(record *Record) {
 		if err != nil {
 			continue
 		} else {
+			fmt.Println(in.Answer)
 			record.detectAs = append(record.detectAs, ParseRRA(in.Answer)...)
 		}
 	}
@@ -85,6 +84,7 @@ func SendDNSQuery(record *Record) {
 
 func ControlDNSQueryRoutine(tasks *Task) (err error) {
 	runtime.GOMAXPROCS(runtime.NumCPU())
+	fmt.Println(len(tasks.records))
 	for _, record := range tasks.records {
 		go SendDNSQuery(record)
 	}
