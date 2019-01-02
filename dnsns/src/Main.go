@@ -45,10 +45,10 @@ func main() {
 	ControlCompareRoutine(tasks)
 	TaskRunSuccess()
 	//进度
-	process := len(tasks.records) / 10
-	final_process := len(tasks.records) % 10
+	process := len(tasks.records) / 30
+	final_process := len(tasks.records) % 30
 	for i := 0; i < process; i++ {
-		err = SendProcess(tasks.taskID, tasks.uuid, "DomainInfo", 10, false)
+		err = SendProcess(tasks.taskID, tasks.uuid, "DomainInfo", 30, false)
 		if err != nil {
 			WriteResultFail()
 			WriteError2Appstatus(err.Error(), 1)
