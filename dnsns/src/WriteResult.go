@@ -6,6 +6,7 @@ import (
 	"runtime"
 	"strings"
 	"fmt"
+    "strconv"
 )
 
 const ResultPath  = "/tmp/result/"
@@ -43,7 +44,8 @@ func ControlWriteResultRoutine(tasks *Task) (err error){
 	if err != nil && !os.IsExist(err) {
 		return
 	}
+    totalNum := len(tasks.records)
 	err = ioutil.WriteFile(ResultPath + tasks.taskID + ".result",
-		[]byte(resultContent), 0644)
+		[]byte(tasks.taskID + "|" + strconv.Itoa(totalNum) + "\n" + resultContent), 0644)
 	return
 }

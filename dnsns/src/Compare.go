@@ -61,11 +61,15 @@ func Compare(record *Record) {
 	}
 	//查询超时
 	if record.timeoutFlag {
-		record.result = "0-00-0-0-00"
+		record.result = "0-11-0-0-10"
 		return
 	}
 	//未获取到配置
 	if !compareAFlag && !compareCNameFlag {
+		fmt.Println("no conf")
+		fmt.Println(compareAFlag)
+		fmt.Println(compareCNameFlag)
+		fmt.Println("no conf end")
 		record.result = "0-00-1-0-00"
 		return
 	}
@@ -112,7 +116,7 @@ func Compare(record *Record) {
 		return
 	} else if correctAFlag == FALSE && correctCNameFlag != FALSE {
 		//NS_A错误
-		record.result = "0-11-1-1-01"
+		record.result = "0-11-1-1-00"
 		return
 	} else if correctAFlag != FALSE && correctCNameFlag == FALSE {
 		//NS_DNS错误

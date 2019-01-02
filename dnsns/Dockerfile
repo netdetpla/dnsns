@@ -6,6 +6,7 @@ RUN mkdir -p $GOPATH/src/golang.org/x/ \
     && git clone https://github.com/golang/text.git \
     && go get github.com/miekg/dns \
     && go get github.com/go-sql-driver/mysql \
+    && go get github.com/weppos/publicsuffix-go/publicsuffix \
     && go get github.com/sparrc/go-ping
 
 ADD ["go-build.sh", "/"]
