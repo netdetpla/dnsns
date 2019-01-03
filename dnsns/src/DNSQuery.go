@@ -9,6 +9,7 @@ import (
 )
 
 var quit = make(chan error)
+var ctrl = make(chan int)
 
 func ParseRR(rrs []dns.RR) (as []string, cNames []string) {
 	for _, rr := range rrs {
@@ -97,6 +98,7 @@ NSStart:
 			fmt.Println(record.detectAs)
 		}
 	}
+	<- ctrl
 	quit <- nil
 	return
 }
@@ -105,11 +107,13 @@ func ControlDNSQueryRoutine(tasks *Task) (err error) {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	fmt.Println(len(tasks.records))
 	for _, record := range tasks.records {
+		ctrl <- 1
 		go SendDNSQuery(record)
 	}
 	for i := 0; i < len(tasks.records); i++ {
 		err = <-quit
 	}
+	close(ctrl)
 	close(quit)
 	return err
 }

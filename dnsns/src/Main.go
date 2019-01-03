@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
 )
 
 func main() {
@@ -53,7 +52,7 @@ func main() {
 			WriteResultFail()
 			WriteError2Appstatus(err.Error(), 1)
 		}
-		time.Sleep(time.Duration(1 * time.Second))
+		//time.Sleep(time.Duration(1 * time.Second))
 	}
 	err = SendProcess(tasks.taskID, tasks.uuid, "DomainInfo", final_process, true)
 		if err != nil {
