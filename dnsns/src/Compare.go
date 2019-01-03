@@ -66,11 +66,7 @@ func Compare(record *Record) {
 	}
 	//未获取到配置
 	if !compareAFlag && !compareCNameFlag {
-		fmt.Println("no conf")
-		fmt.Println(compareAFlag)
-		fmt.Println(compareCNameFlag)
-		fmt.Println("no conf end")
-		record.result = "0-00-1-0-00"
+		record.result = "0-00-0-0-00"
 		return
 	}
 	//无效应答
@@ -93,18 +89,18 @@ func Compare(record *Record) {
 	//	return
 	//}
 	//A记录与CNAME均需要比较，其余情况
-	if compareAFlag && compareCNameFlag && detectAFlag && detectCNameFlag {
+	if compareAFlag && compareCNameFlag {
 		//比较A记录
 		correctAFlag = CompareList(record.detectAs, record.rightRecord.rightAs)
 		//比较CNAME
 		correctCNameFlag = CompareList(record.detectCNames, record.rightRecord.rightCNames)
-	} else if compareAFlag && detectAFlag {
+	} else if compareAFlag {
 		//比较A记录
 		correctAFlag = CompareList(record.detectAs, record.rightRecord.rightAs)
-	} else if compareCNameFlag && detectCNameFlag {
+	} else if compareCNameFlag {
 		//比较CNAME
 		correctCNameFlag = CompareList(record.detectCNames, record.rightRecord.rightCNames)
-	} else if compareAFlag || compareCNameFlag {
+	} else {
 		//无效应答（无法比较）
 		record.result = "0-11-0-0-10"
 		return

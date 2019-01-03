@@ -1,9 +1,12 @@
 package main
 
 import (
-	"os"
 	"fmt"
+<<<<<<< HEAD
 	"time"
+=======
+	"os"
+>>>>>>> 685a712602a891026d6a186db5bcf8841158998d
 )
 
 func main() {
@@ -20,7 +23,7 @@ func main() {
 	}
 	//网络检查
 	netCheckFlag, err := NetCheck()
-	if err != nil || !netCheckFlag{
+	if err != nil || !netCheckFlag {
 		ConnectFail()
 		WriteError2Appstatus("Can not connect to the Internet.", 2)
 	}
@@ -34,6 +37,7 @@ func main() {
 		WriteError2Appstatus(err.Error(), 3)
 	}
 	GetConfSuccess()
+	_ = SendUDP(tasks.taskID, randString, "run")
 	//任务执行
 	_ = SendUDP(tasks.taskID, randString, "run")
 	TaskRun()
@@ -44,6 +48,7 @@ func main() {
 	}
 	ControlCompareRoutine(tasks)
 	TaskRunSuccess()
+	//进度
 	process := len(tasks.records) / 30
 	final_process := len(tasks.records) % 30
 	for i := 0; i < process; i++ {
