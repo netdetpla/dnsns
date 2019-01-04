@@ -16,6 +16,10 @@ func CompareList(detects []string, rights []string) (correctFlag int) {
 	fmt.Println(detects)
 	fmt.Println(rights)
 	correctFlag = TRUE
+    if !CheckEmptyStr(detects) {
+        correctFlag = FALSE
+        return
+    }
 	for _, detect := range detects {
 		singleCorrectFlag := false
 		for _, right := range rights {
@@ -106,21 +110,24 @@ func Compare(record *Record) {
 		return
 	}
 	//结果判断
-	if correctAFlag != FALSE && correctCNameFlag != FALSE {
+	if correctAFlag == TRUE && correctCNameFlag == TRUE {
 		//比对一致
 		record.result = "0-11-1-0-00"
 		return
-	} else if correctAFlag == FALSE && correctCNameFlag != FALSE {
+	} else if correctAFlag == FALSE && correctCNameFlag == FALSE {
+        //均错误
+        record.result = "0-11-1-1-11"
+        return
+    } else if correctAFlag == FALSE {
 		//NS_A错误
 		record.result = "0-11-1-1-00"
 		return
-	} else if correctAFlag != FALSE && correctCNameFlag == FALSE {
+	} else if correctCNameFlag == FALSE {
 		//NS_DNS错误
 		record.result = "0-11-1-1-10"
 		return
-	} else if correctAFlag == FALSE && correctCNameFlag == FALSE {
-		//均错误
-		record.result = "0-11-1-1-11"
+	} else {
+		record.result = "0-11-0-0-10"
 		return
 	}
 }

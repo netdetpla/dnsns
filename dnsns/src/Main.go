@@ -2,11 +2,8 @@ package main
 
 import (
 	"fmt"
-<<<<<<< HEAD
 	"time"
-=======
 	"os"
->>>>>>> 685a712602a891026d6a186db5bcf8841158998d
 )
 
 func main() {
@@ -37,7 +34,6 @@ func main() {
 		WriteError2Appstatus(err.Error(), 3)
 	}
 	GetConfSuccess()
-	_ = SendUDP(tasks.taskID, randString, "run")
 	//任务执行
 	_ = SendUDP(tasks.taskID, randString, "run")
 	TaskRun()

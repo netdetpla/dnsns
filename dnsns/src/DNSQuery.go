@@ -9,7 +9,7 @@ import (
 )
 
 var quit = make(chan error)
-var ctrl = make(chan int)
+var ctrl = make(chan int, 100)
 
 func ParseRR(rrs []dns.RR) (as []string, cNames []string) {
 	for _, rr := range rrs {
@@ -55,6 +55,7 @@ func ParseRRA(rrs []dns.RR) (as []string) {
 }
 
 func SendDNSQuery(record *Record) {
+	fmt.Println("t start")
 	//探测NS
 	m := new(dns.Msg)
 	domain, err := publicsuffix.Domain(record.rightRecord.domain)
@@ -99,6 +100,7 @@ NSStart:
 		}
 	}
 	<- ctrl
+	fmt.Println("t quit")
 	quit <- nil
 	return
 }
@@ -107,11 +109,13 @@ func ControlDNSQueryRoutine(tasks *Task) (err error) {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	fmt.Println(len(tasks.records))
 	for _, record := range tasks.records {
+		fmt.Println("ctrl start")
 		ctrl <- 1
 		go SendDNSQuery(record)
 	}
 	for i := 0; i < len(tasks.records); i++ {
 		err = <-quit
+		fmt.Println("ctrl quit")
 	}
 	close(ctrl)
 	close(quit)
