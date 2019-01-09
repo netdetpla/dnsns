@@ -30,15 +30,17 @@ func getRightValue(domains []string) (rightRecords []*RightRecord, err error) {
 	//TODO 备份
 	db, err := sql.Open(
 		"mysql",
-		"zyq:123456@tcp(10.96.129.6:3306)/cncert_initiative_probe_system?timeout=20s")
+		"root:123456@tcp(10.96.129.133:3306)/cncert_initiative_probe_system?timeout=20s")
 		//"zyq:123456@tcp(10.96.129.6:3306)/cncert_initiative_probe_system")
-
+	db.SetMaxOpenConns(50);
+	db.SetMaxIdleConns(1);
 	if err != nil {
 		return nil, err
 	}
 	if err = db.Ping(); err != nil {
 		return nil, err
 	}
+	defer db.Close()
 	//查询数据
 	querySQL := "SELECT dns_domain_name, ns_A FROM domain_library WHERE domain_name=?"
 	//fmt.Println(len(domains))
@@ -47,7 +49,6 @@ func getRightValue(domains []string) (rightRecords []*RightRecord, err error) {
 			continue
 		}
 		rows, err := db.Query(querySQL, domain)
-		defer rows.Close()
 		if err != nil {
 			return nil, err
 		}
@@ -68,6 +69,7 @@ func getRightValue(domains []string) (rightRecords []*RightRecord, err error) {
 			rightCNames: SplitCNames(rightCNamesStr),
 		}
 		rightRecords = append(rightRecords, rightRecord)
+		rows.Close()
 	}
 	return
 }
