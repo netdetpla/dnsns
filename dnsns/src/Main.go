@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 	"os"
 )
 
 func main() {
-	randString := GetRandomString(20)
+	randString := ""
 	_ = SendUDP("", randString, "start")
 	err := os.Mkdir(AppstatusPath, 0777)
 	if err != nil && !os.IsExist(err) {
@@ -34,6 +35,8 @@ func main() {
 		WriteError2Appstatus(err.Error(), 3)
 	}
 	GetConfSuccess()
+	startTime := time.Now().Unix()
+	_ = SendUDP(tasks.taskID, tasks.subID, "run")
 	//任务执行
 	_ = SendUDP(tasks.taskID, randString, "run")
 	TaskRun()
@@ -68,7 +71,9 @@ func main() {
 		WriteError2Appstatus(err.Error(), 1)
 	}
 	WriteResultSuccess()
-	_ = SendUDP(tasks.taskID, randString, "finish")
+	endTime := time.Now().Unix()
+	duration := endTime - startTime
+	_ = SendUDP(tasks.taskID, tasks.subID, "len: "+strconv.Itoa(len(tasks.records))+"; duration: "+strconv.FormatInt(duration, 10))
 	//写状态文件
 	WriteSuccess2Appstatus()
 }

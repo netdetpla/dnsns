@@ -23,6 +23,7 @@ type Task struct {
 	taskID string
 	taskName string
 	uuid string
+	subID string
 	records []*Record
 }
 
@@ -61,6 +62,7 @@ func GetTaskConfig() (task *Task, err error) {
 	}
 
 	task.taskName = taskConfig[2]
-	task.uuid = taskConfig[len(taskConfig) - 1]
+	task.uuid = taskConfig[len(taskConfig)-2]
+	task.subID = taskConfig[len(taskConfig)-1]
 	return
 }
