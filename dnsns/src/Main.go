@@ -38,7 +38,6 @@ func main() {
 	startTime := time.Now().Unix()
 	_ = SendUDP(tasks.taskID, tasks.subID, "run")
 	//任务执行
-	_ = SendUDP(tasks.taskID, randString, "run")
 	TaskRun()
 	err = ControlDNSQueryRoutine(tasks)
 	if err != nil {
@@ -56,7 +55,6 @@ func main() {
 			WriteResultFail()
 			WriteError2Appstatus(err.Error(), 1)
 		}
-		time.Sleep(time.Duration(1 * time.Second))
 	}
 	err = SendProcess(tasks.taskID, tasks.uuid, "DomainInfo", final_process, true)
 		if err != nil {
