@@ -63,14 +63,14 @@ func Compare(record *Record) {
 	} else if compareCNameFlag {
 		record.compareType = "NS_DNS"
 	}
-	//查询超时
-	if record.timeoutFlag {
-		record.result = "0-11-0-0-10"
-		return
-	}
 	//未获取到配置
 	if !compareAFlag && !compareCNameFlag {
 		record.result = "0-00-0-0-00"
+		return
+	}
+	//查询超时
+	if record.timeoutFlag {
+		record.result = "0-11-0-0-10"
 		return
 	}
 	//无效应答
@@ -110,7 +110,7 @@ func Compare(record *Record) {
 		return
 	}
 	//结果判断
-	if correctAFlag == TRUE && correctCNameFlag == TRUE {
+	if correctAFlag + correctCNameFlag > 0 {
 		//比对一致
 		record.result = "0-11-1-0-00"
 		return

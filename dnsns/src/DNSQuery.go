@@ -9,7 +9,7 @@ import (
 )
 
 var quit = make(chan error)
-var ctrl = make(chan int, 50)
+var ctrl = make(chan int, 100)
 
 func ParseRR(rrs []dns.RR) (as []string, cNames []string) {
 	for _, rr := range rrs {
