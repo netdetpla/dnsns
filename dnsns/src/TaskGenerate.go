@@ -37,11 +37,11 @@ func GetTaskConfig() (task *Task, err error) {
 	taskConfig := strings.Split(string(taskConfigB), ";")
 	fmt.Println(taskConfig)
 
-	task.taskID = taskConfig[1]
+	task.taskID = taskConfig[0]
 
 	//组合域名、递归服务器、正确值
-	domains := taskConfig[4 : len(taskConfig)-1]
-	reServers := strings.Split(taskConfig[3], "+")
+	domains := taskConfig[3 : len(taskConfig)-1]
+	reServers := strings.Split(taskConfig[2], "+")
 	for _, reServer := range reServers {
 		if len(reServer) == 0 {
 			continue
@@ -54,7 +54,7 @@ func GetTaskConfig() (task *Task, err error) {
 		}
 	}
 
-	task.taskName = taskConfig[2]
+	task.taskName = taskConfig[1]
 	task.uuid = taskConfig[len(taskConfig)-1]
 	return
 }
