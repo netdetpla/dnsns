@@ -9,6 +9,6 @@ RUN mkdir -p $GOPATH/src/golang.org/x/ \
     && go get github.com/weppos/publicsuffix-go/publicsuffix \
     && go get github.com/sparrc/go-ping
 
-ADD ["go-build.sh", "/"]
+WORKDIR /dnssecure/src
 
-WORKDIR /
+CMD ["go", "build", "-o", "/dnssecure/bin/dnssecure.b", "./"]

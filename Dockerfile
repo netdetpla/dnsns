@@ -1,5 +1,5 @@
 FROM scratch
 
-ADD ["bin/dnsns-bin", "/"]
+ADD ["bin/dnsns.b", "/"]
 
-CMD ["/dnsns-bin"]
+CMD ["/dnsns.b"]

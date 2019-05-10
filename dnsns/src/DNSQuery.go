@@ -58,7 +58,7 @@ func SendDNSQuery(record *Record) {
 	fmt.Println("t start")
 	//探测NS
 	m := new(dns.Msg)
-	domain, err := publicsuffix.Domain(record.rightRecord.domain)
+	domain, err := publicsuffix.Domain(record.domain)
 	m.SetQuestion(dns.Fqdn(domain), dns.TypeNS)
 	errCount := 3
 NSStart:

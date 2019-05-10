@@ -1,12 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"runtime"
 	"strings"
-	"fmt"
-    "strconv"
 )
 
 const ResultPath  = "/tmp/result/"
@@ -18,12 +17,8 @@ func GenerateResultLine(record *Record, taskID string, taskName string) {
 	detectCNamesStr := strings.Join(record.detectCNames, "+")
 	fmt.Println(record.detectAs)
 	fmt.Println(record.detectCNames)
-	compareCNamesStr := strings.Join(record.rightRecord.rightCNames, "+")
-	fmt.Println(compareCNamesStr)
 	resultList = append(resultList,
-		taskName, taskID, record.rightRecord.domain + ":" + compareCNamesStr,
-		"0", record.reServer, record.compareType,
-		detectCNamesStr + "/" + detectAsStr, record.result, "\n")
+		taskName, taskID, record.domain, record.reServer, detectCNamesStr + "/" + detectAsStr, "\n")
 	resultStr := strings.Join(resultList, ";")
 	fmt.Println(resultStr)
 	resultLine <- resultStr
@@ -44,8 +39,7 @@ func ControlWriteResultRoutine(tasks *Task) (err error){
 	if err != nil && !os.IsExist(err) {
 		return
 	}
-    totalNum := len(tasks.records)
 	err = ioutil.WriteFile(ResultPath + tasks.taskID + ".result",
-		[]byte(tasks.taskID + "|" + strconv.Itoa(totalNum) + "|" + tasks.subID + "\n" + resultContent), 0644)
+		[]byte(resultContent), 0644)
 	return
 }
